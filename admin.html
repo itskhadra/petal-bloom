@@ -1,0 +1,60 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Petal Bloom | Manage Flowers</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="admin.css">
+</head>
+<body>
+  <header class="site-header">
+    <nav class="navigation">
+      <a class="logo" href="index.html">Petal Bloom</a>
+      <div class="nav-links">
+        <a href="index.html">View Shop</a>
+        <a href="admin.html">Manage Flowers</a>
+      </div>
+    </nav>
+  </header>
+
+  <main class="section-pad">
+    <section>
+      <p class="eyebrow">Flower management</p>
+      <h1>Manage your flowers</h1>
+      <p>Create new products, update existing details, or remove flowers.</p>
+
+      <form id="flower-form">
+        <input type="hidden" id="flower-id">
+
+        <label for="flower-name">Flower name</label>
+        <input id="flower-name" name="name" type="text" required>
+
+        <label for="flower-description">Description</label>
+        <textarea id="flower-description" name="description" required></textarea>
+
+        <label for="flower-price">Price in Ksh</label>
+        <input id="flower-price" name="price" type="number" min="0" required>
+
+        <label for="flower-image">Image URL</label>
+        <input id="flower-image" name="image" type="url" required>
+
+        <button type="submit" id="save-flower">Add flower</button>
+        <button type="button" id="cancel-edit" hidden>Cancel edit</button>
+      </form>
+
+      <p id="admin-message" role="status" aria-live="polite"></p>
+    </section>
+
+    <section>
+      <h2>Current flowers</h2>
+      <div id="admin-products" aria-live="polite">
+        Loading flowers...
+      </div>
+    </section>
+  </main>
+
+  <script src="admin.js"></script>
+</body>
+</html>

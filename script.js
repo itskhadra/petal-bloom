@@ -1,5 +1,5 @@
 
-const API_URL = "http://localhost:3000/flowers";
+const API_URL = "http://localhost:3001/flowers";
 const productGrid = document.querySelector(".product-grid");
 const bagCount = document.querySelector("#bag-count");
 const bagLink = document.querySelector(".bag-link");

@@ -1,0 +1,273 @@
+
+/* PETAL BLOOM — ADMIN PAGE DESIGN */
+
+body {
+  margin: 0;
+  background: #fbf6f2;
+  color: #443238;
+  font-family: Arial, sans-serif;
+}
+
+/* Navigation */
+.site-header {
+  background: #fff;
+  border-bottom: 1px solid #eaded9;
+}
+
+.navigation {
+  max-width: 1150px;
+  margin: auto;
+  padding: 20px 28px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+}
+
+.logo {
+  color: #804b5b;
+  font-family: Georgia, serif;
+  font-size: 27px;
+  font-weight: bold;
+  text-decoration: none;
+}
+
+.nav-links {
+  display: flex;
+  gap: 24px;
+}
+
+.nav-links a {
+  color: #55434a;
+  text-decoration: none;
+  font-size: 14px;
+}
+
+.nav-links a:hover {
+  color: #b16f82;
+}
+
+/* Main layout */
+main.section-pad {
+  max-width: 1050px;
+  margin: auto;
+  padding: 45px 28px 70px;
+}
+
+main.section-pad > section {
+  margin-bottom: 42px;
+}
+
+.eyebrow {
+  color: #a36579;
+  font-size: 12px;
+  font-weight: bold;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+main.section-pad h1,
+main.section-pad h2 {
+  color: #49343b;
+  font-family: Georgia, serif;
+  font-weight: normal;
+}
+
+main.section-pad h1 {
+  margin: 10px 0;
+  font-size: 42px;
+}
+
+main.section-pad h2 {
+  margin-bottom: 20px;
+  font-size: 30px;
+}
+
+main.section-pad p {
+  line-height: 1.6;
+}
+
+/* Add flower form */
+#flower-form {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px 18px;
+  max-width: 760px;
+  margin-top: 24px;
+  padding: 28px;
+  background: #fff;
+  border: 1px solid #eaded9;
+  border-radius: 16px;
+  box-shadow: 0 8px 25px rgba(75, 45, 50, 0.06);
+}
+
+#flower-form label {
+  align-self: end;
+  color: #5d454d;
+  font-size: 13px;
+  font-weight: bold;
+}
+
+#flower-form input,
+#flower-form textarea {
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
+  padding: 12px 14px;
+  border: 1px solid #dfd0d0;
+  border-radius: 8px;
+  background: #fffdfc;
+  color: #443238;
+  font: inherit;
+}
+
+#flower-form textarea {
+  min-height: 90px;
+  resize: vertical;
+}
+
+#flower-form input:focus,
+#flower-form textarea:focus {
+  outline: 2px solid #d9a8b6;
+  border-color: #a36579;
+}
+
+#flower-form button {
+  justify-self: start;
+  padding: 12px 22px;
+  border: none;
+  border-radius: 8px;
+  background: #804b5b;
+  color: white;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+#flower-form button:hover {
+  background: #633746;
+}
+
+#flower-form #cancel-edit {
+  background: #eee4e2;
+  color: #49343b;
+}
+
+#admin-message {
+  color: #804b5b;
+}
+
+/* Current flower cards */
+#admin-products {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 22px;
+  margin-top: 20px;
+}
+
+.admin-flower-card {
+  box-sizing: border-box;
+  display: grid;
+  grid-template-columns: 145px minmax(0, 1fr);
+  align-content: start;
+  align-items: start;
+  gap: 8px 18px;
+  padding: 18px;
+  background: #fff;
+  border: 1px solid #eaded9;
+  border-radius: 14px;
+  box-shadow: 0 5px 18px rgba(75, 45, 50, 0.05);
+  overflow-wrap: anywhere;
+}
+
+.admin-flower-card img {
+  grid-column: 1;
+  grid-row: 1 / span 3;
+  width: 145px !important;
+  height: 155px;
+  object-fit: cover;
+  border-radius: 10px;
+  background: #f3e9e7;
+}
+
+.admin-flower-card h3 {
+  margin: 2px 0 4px;
+  color: #754653;
+  font-family: Georgia, serif;
+  font-size: 20px;
+}
+
+.admin-flower-card p {
+  margin: 3px 0;
+  font-size: 14px;
+}
+
+.admin-flower-card p:nth-of-type(2) {
+  color: #804b5b;
+  font-weight: bold;
+  font-size: 15px;
+}
+
+.admin-flower-card button {
+  margin: 8px 8px 0 0;
+  padding: 9px 16px;
+  border: none;
+  border-radius: 7px;
+  background: #804b5b;
+  color: #fff;
+  cursor: pointer;
+}
+
+.admin-flower-card button:hover {
+  background: #633746;
+}
+
+.admin-flower-card button:last-child {
+  background: #f3e5e5;
+  color: #754653;
+}
+
+.admin-flower-card button:last-child:hover {
+  background: #e8d1d5;
+}
+
+/* Smaller screens */
+@media (max-width: 700px) {
+  .navigation {
+    padding: 18px;
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .nav-links {
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+
+  main.section-pad {
+    padding: 30px 18px 50px;
+  }
+
+  main.section-pad h1 {
+    font-size: 34px;
+  }
+
+  #flower-form {
+    grid-template-columns: 1fr;
+    padding: 20px;
+  }
+
+  #admin-products {
+    grid-template-columns: 1fr;
+  }
+
+  .admin-flower-card {
+    grid-template-columns: 110px minmax(0, 1fr);
+    padding: 12px;
+    gap: 8px 12px;
+  }
+
+  .admin-flower-card img {
+    width: 110px !important;
+    height: 125px;
+  }
+}

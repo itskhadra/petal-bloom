@@ -1,20 +1,20 @@
 {
   "flowers": [
     {
-      "id": "1",
       "name": "Blush Peonies",
       "description": "Soft, romantic, and full of charm — freshly updated",
-      "price": 1800,
+      "price": 2000,
       "image": "https://images.unsplash.com/photo-1575178094668-132dc931ad35?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&q=85&w=900&h=1050",
-      "category": "Peonies"
+      "category": "Flowers",
+      "id": "1"
     },
     {
-      "id": "2",
       "name": "Garden Tulips",
       "description": "Fresh stems for brighter days",
       "price": 1500,
       "image": "https://images.unsplash.com/photo-1620753324325-059996de237e?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&q=85&w=900&h=1050",
-      "category": "Tulips"
+      "category": "Flowers",
+      "id": "2"
     },
     {
       "id": "3",

@@ -1,95 +1,159 @@
 
-const API_URL = "http://127.0.0.1:3000/flowers";
+const API_URL = "http://localhost:3001/flowers";
 
-const form = document.querySelector("#flower-form");
-const flowerId = document.querySelector("#flower-id");
-const nameInput = document.querySelector("#flower-name");
-const descriptionInput = document.querySelector("#flower-description");
-const priceInput = document.querySelector("#flower-price");
-const imageInput = document.querySelector("#flower-image");
-const saveButton = document.querySelector("#save-flower");
-const cancelButton = document.querySelector("#cancel-edit");
-const message = document.querySelector("#admin-message");
-const productList = document.querySelector("#admin-products");
+const flowerForm = document.querySelector("#flower-form");
+const flowerName = document.querySelector("#flower-name");
+const flowerDescription = document.querySelector("#flower-description");
+const flowerPrice = document.querySelector("#flower-price");
+const flowerImage = document.querySelector("#flower-image");
+const flowersList = document.querySelector("#admin-products");
+const cancelEditButton = document.querySelector("#cancel-edit");
+const submitButton = document.querySelector("#save-flower");
 
+let editingFlowerId = null;
+
+// Reset the form and return to adding a new flower
+function resetFlowerForm() {
+  flowerForm.reset();
+  editingFlowerId = null;
+  submitButton.textContent = "Add flower";
+  cancelEditButton.hidden = true;
+}
+
+// Load and display flowers
 async function loadFlowers() {
   try {
-    message.textContent = "Loading flowers...";
-
     const response = await fetch(API_URL);
 
     if (!response.ok) {
-      throw new Error("Could not load flowers.");
+      throw new Error("Could not load flowers");
     }
 
     const flowers = await response.json();
-    productList.replaceChildren();
+    flowersList.innerHTML = "";
 
     if (flowers.length === 0) {
-      productList.textContent = "No flowers found.";
+      flowersList.textContent = "No flowers added yet.";
+      return;
     }
 
     flowers.forEach((flower) => {
-      const card = document.createElement("article");
-      card.className = "product-card";
+      const card = document.createElement("div");
+      card.className = "admin-flower-card";
 
-      const title = document.createElement("h3");
-      title.textContent = flower.name;
+      const image = document.createElement("img");
+      image.src = flower.image;
+      image.alt = flower.name;
+      image.style.width = "100px";
+      image.onerror = () => {
+        image.style.display = "none";
+      };
+
+      const name = document.createElement("h3");
+      name.textContent = flower.name;
 
       const description = document.createElement("p");
       description.textContent = flower.description;
 
-      const price = document.createElement("strong");
-      price.textContent =
-        `Ksh ${Number(flower.price).toLocaleString("en-KE")}`;
+      const price = document.createElement("p");
+      price.textContent = `Ksh ${flower.price}`;
 
       const editButton = document.createElement("button");
       editButton.type = "button";
       editButton.textContent = "Edit";
-      editButton.addEventListener("click", () => editFlower(flower));
+
+      editButton.addEventListener("click", () => {
+        flowerName.value = flower.name;
+        flowerDescription.value = flower.description;
+        flowerPrice.value = flower.price;
+        flowerImage.value = flower.image;
+
+        editingFlowerId = flower.id;
+        submitButton.textContent = "Update flower";
+        cancelEditButton.hidden = false;
+
+        flowerForm.scrollIntoView({ behavior: "smooth" });
+      });
 
       const deleteButton = document.createElement("button");
       deleteButton.type = "button";
       deleteButton.textContent = "Delete";
-      deleteButton.addEventListener("click", () => deleteFlower(flower));
+
+      deleteButton.addEventListener("click", async () => {
+        if (!confirm(`Delete ${flower.name}?`)) {
+          return;
+        }
+
+        try {
+          const deleteResponse = await fetch(
+            `${API_URL}/${flower.id}`,
+            { method: "DELETE" }
+          );
+
+          if (!deleteResponse.ok) {
+            throw new Error("Could not delete flower");
+          }
+
+          if (editingFlowerId === flower.id) {
+            resetFlowerForm();
+          }
+
+          await loadFlowers();
+        } catch (error) {
+          console.error(error);
+          alert("Could not delete the flower. Please check the API server.");
+        }
+      });
 
       card.append(
-        title,
+        image,
+        name,
         description,
         price,
         editButton,
         deleteButton
       );
 
-      productList.appendChild(card);
+      flowersList.appendChild(card);
     });
-
-    message.textContent = "";
   } catch (error) {
-    message.textContent =
-      "Could not load flowers. Check that your API server is running.";
-    console.error(error);
+    console.error("Loading flowers failed:", error);
+    flowersList.textContent =
+      "Could not load flowers. Check that JSON Server is running on port 3001.";
   }
 }
 
-form.addEventListener("submit", async (event) => {
+// Add a new flower or update an existing one
+flowerForm.addEventListener("submit", async (event) => {
   event.preventDefault();
 
   const flower = {
-    name: nameInput.value.trim(),
-    description: descriptionInput.value.trim(),
-    price: Number(priceInput.value),
-    image: imageInput.value.trim()
+    name: flowerName.value.trim(),
+    description: flowerDescription.value.trim(),
+    price: Number(flowerPrice.value),
+    image: flowerImage.value.trim(),
+    category: "Flowers"
   };
 
-  try {
-    const isEditing = flowerId.value !== "";
-    const url = isEditing
-      ? `${API_URL}/${encodeURIComponent(flowerId.value)}`
-      : API_URL;
+  if (
+    !flower.name ||
+    !flower.description ||
+    !flower.image ||
+    !Number.isFinite(flower.price) ||
+    flower.price <= 0
+  ) {
+    alert("Please complete every field and enter a price greater than zero.");
+    return;
+  }
 
+  const isEditing = editingFlowerId !== null;
+  const url = isEditing
+    ? `${API_URL}/${editingFlowerId}`
+    : API_URL;
+
+  try {
     const response = await fetch(url, {
-      method: isEditing ? "PATCH" : "POST",
+      method: isEditing ? "PUT" : "POST",
       headers: {
         "Content-Type": "application/json"
       },
@@ -97,64 +161,21 @@ form.addEventListener("submit", async (event) => {
     });
 
     if (!response.ok) {
-      throw new Error("Could not save flower.");
+      throw new Error("Could not save flower");
     }
 
-    message.textContent = isEditing
-      ? "Flower updated successfully!"
-      : "Flower added successfully!";
-
-    resetForm();
+    resetFlowerForm();
     await loadFlowers();
+
+    alert(isEditing ? "Flower updated successfully!" : "Flower added successfully!");
   } catch (error) {
-    message.textContent = "Could not save flower. Please try again.";
-    console.error(error);
+    console.error("Saving flower failed:", error);
+    alert("Could not save the flower. Please check that JSON Server is running.");
   }
 });
 
-function editFlower(flower) {
-  flowerId.value = flower.id;
-  nameInput.value = flower.name;
-  descriptionInput.value = flower.description;
-  priceInput.value = flower.price;
-  imageInput.value = flower.image;
+// Cancel editing and clear the form
+cancelEditButton.addEventListener("click", resetFlowerForm);
 
-  saveButton.textContent = "Save changes";
-  cancelButton.hidden = false;
-  message.textContent = "Editing " + flower.name;
-  form.scrollIntoView({ behavior: "smooth", block: "start" });
-}
-
-async function deleteFlower(flower) {
-  if (!window.confirm(`Delete ${flower.name}?`)) {
-    return;
-  }
-
-  try {
-    const response = await fetch(
-      `${API_URL}/${encodeURIComponent(flower.id)}`,
-      { method: "DELETE" }
-    );
-
-    if (!response.ok) {
-      throw new Error("Could not delete flower.");
-    }
-
-    message.textContent = "Flower deleted successfully!";
-    await loadFlowers();
-  } catch (error) {
-    message.textContent = "Could not delete flower. Please try again.";
-    console.error(error);
-  }
-}
-
-function resetForm() {
-  form.reset();
-  flowerId.value = "";
-  saveButton.textContent = "Add flower";
-  cancelButton.hidden = true;
-}
-
-cancelButton.addEventListener("click", resetForm);
-
+// Load flowers when the page opens
 loadFlowers();

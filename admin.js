@@ -1,5 +1,6 @@
 
 const API_URL = "http://localhost:3001/flowers";
+const ORDERS_URL = "http://localhost:3001/orders";
 
 const flowerForm = document.querySelector("#flower-form");
 const flowerName = document.querySelector("#flower-name");
@@ -7,6 +8,7 @@ const flowerDescription = document.querySelector("#flower-description");
 const flowerPrice = document.querySelector("#flower-price");
 const flowerImage = document.querySelector("#flower-image");
 const flowersList = document.querySelector("#admin-products");
+const ordersList = document.querySelector("#admin-orders");
 const cancelEditButton = document.querySelector("#cancel-edit");
 const submitButton = document.querySelector("#save-flower");
 
@@ -123,6 +125,114 @@ async function loadFlowers() {
   }
 }
 
+// Load and display customer orders
+async function loadOrders() {
+  try {
+    const response = await fetch(ORDERS_URL);
+
+    if (!response.ok) {
+      throw new Error("Could not load customer orders");
+    }
+
+    const orders = await response.json();
+    ordersList.innerHTML = "";
+
+    if (!Array.isArray(orders) || orders.length === 0) {
+      ordersList.textContent = "No customer orders yet.";
+      return;
+    }
+
+    orders.forEach((order) => {
+      const card = document.createElement("article");
+      card.className = "admin-order-card";
+
+      const heading = document.createElement("h3");
+      heading.textContent = `Order #${order.id}`;
+
+      const customer = document.createElement("p");
+      customer.textContent = `Customer: ${order.customerName || "Not provided"}`;
+
+      const phone = document.createElement("p");
+      phone.textContent = `Phone: ${order.phone || "Not provided"}`;
+
+      const address = document.createElement("p");
+      address.textContent =
+        `Delivery address: ${order.deliveryAddress || "Not provided"}`;
+
+      const itemsHeading = document.createElement("h4");
+      itemsHeading.textContent = "Flowers ordered";
+
+      const itemsList = document.createElement("ul");
+
+      (Array.isArray(order.items) ? order.items : []).forEach((item) => {
+        const listItem = document.createElement("li");
+        listItem.textContent =
+          `${item.name} × ${item.quantity} — Ksh ${
+            Number(item.price) * Number(item.quantity)
+          }`;
+        itemsList.appendChild(listItem);
+      });
+
+      const total = document.createElement("p");
+      total.textContent = `Total: Ksh ${Number(order.total || 0).toLocaleString()}`;
+
+      const status = document.createElement("p");
+      status.textContent = `Status: ${order.status || "Pending"}`;
+      const updateStatusButton = document.createElement("button");
+updateStatusButton.type = "button";
+updateStatusButton.textContent = "Mark as Completed";
+
+updateStatusButton.addEventListener("click", async () => {
+  try {
+    const response = await fetch(`${ORDERS_URL}/${order.id}`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ status: "Completed" })
+    });
+
+    if (!response.ok) {
+      throw new Error("Could not update order status");
+    }
+
+    alert("Order marked as completed!");
+    await loadOrders();
+  } catch (error) {
+    console.error(error);
+    alert("Could not update order status. Please try again.");
+  }
+});
+
+      const date = document.createElement("p");
+      const parsedDate = new Date(order.createdAt);
+
+      date.textContent = Number.isNaN(parsedDate.getTime())
+        ? "Date: Not available"
+        : `Date: ${parsedDate.toLocaleString()}`;
+
+      card.append(
+        heading,
+        customer,
+        phone,
+        address,
+        itemsHeading,
+        itemsList,
+        total,
+        status,
+        updateStatusButton,
+        date
+      );
+
+      ordersList.appendChild(card);
+    });
+  } catch (error) {
+    console.error("Loading customer orders failed:", error);
+    ordersList.textContent =
+      "Could not load customer orders. Check that JSON Server is running on port 3001.";
+  }
+}
+
 // Add a new flower or update an existing one
 flowerForm.addEventListener("submit", async (event) => {
   event.preventDefault();
@@ -167,7 +277,11 @@ flowerForm.addEventListener("submit", async (event) => {
     resetFlowerForm();
     await loadFlowers();
 
-    alert(isEditing ? "Flower updated successfully!" : "Flower added successfully!");
+    alert(
+      isEditing
+        ? "Flower updated successfully!"
+        : "Flower added successfully!"
+    );
   } catch (error) {
     console.error("Saving flower failed:", error);
     alert("Could not save the flower. Please check that JSON Server is running.");
@@ -177,5 +291,6 @@ flowerForm.addEventListener("submit", async (event) => {
 // Cancel editing and clear the form
 cancelEditButton.addEventListener("click", resetFlowerForm);
 
-// Load flowers when the page opens
+// Load flowers and orders when the page opens
 loadFlowers();
+loadOrders();

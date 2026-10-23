@@ -1,5 +1,6 @@
 
-const API_URL = "http://localhost:3001/flowers";
+const API_URL = "http://localhost:3001/flowers"
+const ORDERS_URL = "http://localhost:3001/orders";
 const productGrid = document.querySelector(".product-grid");
 const bagCount = document.querySelector("#bag-count");
 const bagLink = document.querySelector(".bag-link");
@@ -125,10 +126,12 @@ function closeBag() {
   bagOverlay.hidden = true;
 }
 
-bagLink.addEventListener("click", (event) => {
-  event.preventDefault();
-  openBag();
-});
+if (bagLink) {
+  bagLink.addEventListener("click", (event) => {
+    event.preventDefault();
+    openBag();
+  });
+}
 
 bagOverlay.addEventListener("click", (event) => {
   if (event.target === bagOverlay) closeBag();
@@ -193,6 +196,97 @@ function renderBag() {
     `Total: Ksh ${totalPrice.toLocaleString("en-KE")}`;
 
   bagContent.appendChild(total);
+
+  // Checkout form
+  const checkoutForm = document.createElement("form");
+  checkoutForm.className = "checkout-form";
+
+  const checkoutHeading = document.createElement("h3");
+  checkoutHeading.textContent = "Complete your order";
+
+  const customerName = document.createElement("input");
+  customerName.type = "text";
+  customerName.placeholder = "Your full name";
+  customerName.required = true;
+  customerName.setAttribute("aria-label", "Your full name");
+
+  const customerPhone = document.createElement("input");
+  customerPhone.type = "tel";
+  customerPhone.placeholder = "Your phone number";
+  customerPhone.required = true;
+  customerPhone.setAttribute("aria-label", "Your phone number");
+
+  const deliveryAddress = document.createElement("textarea");
+  deliveryAddress.placeholder = "Delivery address";
+  deliveryAddress.required = true;
+  deliveryAddress.setAttribute("aria-label", "Delivery address");
+
+  const placeOrderButton = document.createElement("button");
+  placeOrderButton.type = "submit";
+  placeOrderButton.textContent = "Place order";
+
+  checkoutForm.append(
+    checkoutHeading,
+    customerName,
+    customerPhone,
+    deliveryAddress,
+    placeOrderButton
+  );
+
+  checkoutForm.addEventListener("submit", async (event) => {
+    event.preventDefault();
+
+    const order = {
+      customerName: customerName.value.trim(),
+      phone: customerPhone.value.trim(),
+      deliveryAddress: deliveryAddress.value.trim(),
+      items: bag.map((item) => ({
+        id: item.id,
+        name: item.name,
+        price: Number(item.price),
+        quantity: item.quantity
+      })),
+      total: bag.reduce(
+        (sum, item) => sum + Number(item.price) * item.quantity,
+        0
+      ),
+      status: "pending",
+      createdAt: new Date().toISOString()
+    };
+
+    placeOrderButton.disabled = true;
+    placeOrderButton.textContent = "Placing order...";
+
+    try {
+      const response = await fetch(ORDERS_URL, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(order)
+      });
+
+      if (!response.ok) {
+        throw new Error("Order could not be saved");
+      }
+
+      bag = [];
+      saveBag();
+      renderBag();
+
+      alert("Your order was placed successfully!");
+    } catch (error) {
+      console.error("Order submission failed:", error);
+      placeOrderButton.disabled = false;
+      placeOrderButton.textContent = "Place order";
+      alert(
+        "Could not place your order. Please check that JSON Server is running."
+      );
+    }
+  });
+
+  bagContent.appendChild(checkoutForm);
+
 }
 
 async function loadFlowers() {
@@ -278,3 +372,23 @@ async function loadFlowers() {
 
 updateBagCount();
 loadFlowers();
+
+async function loadExternalProducts() {
+  try {
+    const response = await fetch(
+      "https://dummyjson.com/products/category/beauty?limit=5"
+    );
+
+    if (!response.ok) {
+      throw new Error("Could not load external products");
+    }
+
+    const data = await response.json();
+    console.log("DummyJSON products:", data.products);
+  } catch (error) {
+    console.error("DummyJSON error:", error);
+  }
+}
+
+loadExternalProducts();
+

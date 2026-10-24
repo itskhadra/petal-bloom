@@ -376,11 +376,12 @@ loadFlowers();
 async function loadExternalProducts() {
   try {
     const response = await fetch(
-      "https://dummyjson.com/products/category/beauty?limit=5"
+      https://dummyjson.com/products?limit=5
     );
 
     if (!response.ok) {
       throw new Error("Could not load external products");
+      https://dummyjson.com/products?limit=5
     }
 
     const data = await response.json();

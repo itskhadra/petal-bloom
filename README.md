@@ -20,7 +20,7 @@ My goal was to create a simple, user-friendly online flower shop and improve my 
 - **GitHub Repository:** https://github.com/itskhadra/petal-bloom
 - **Backend API:** https://petal-bloom.onrender.com
 - **Flowers API:** https://petal-bloom.onrender.com/flowers
-
+- **Orders API:** [https://petal-bloom.onrender.com/orders](https://petal-bloom.onrender.com/orders)
 ## Technologies Used
 
 - HTML, CSS, and JavaScript

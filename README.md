@@ -14,3 +14,18 @@ I learned how to build a website, connect APIs, manage flower products, calculat
 
 ## Project Goal
 My goal was to create a simple, user-friendly online flower shop and improve my web development skills through practical experience.
+## Project Links
+
+- **Live Website:** https://itskhadra.github.io/petal-bloom/
+- **GitHub Repository:** https://github.com/itskhadra/petal-bloom
+- **Backend API:** https://petal-bloom.onrender.com
+- **Flowers API:** https://petal-bloom.onrender.com/flowers
+
+## Technologies Used
+
+- HTML, CSS, and JavaScript
+- JSON Server for the backend API
+- DummyJSON Products API for external API integration
+- GitHub for version control
+- GitHub Pages for website hosting
+- Render for backend hosting

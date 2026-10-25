@@ -21,6 +21,9 @@ My goal was to create a simple, user-friendly online flower shop and improve my 
 - **Backend API:** https://petal-bloom.onrender.com
 - **Flowers API:** https://petal-bloom.onrender.com/flowers
 - **Orders API:** [https://petal-bloom.onrender.com/orders](https://petal-bloom.onrender.com/orders)
+- ## 🎨 Figma Design
+
+[View Petal Bloom Design](https://www.figma.com/make/s0XtrFaGjbrOqGiWI78l5t/Petal-Bloom---Online-Flower-Shop?t=X6qopAgTXRplCRCI-1)
 ## Technologies Used
 
 - HTML, CSS, and JavaScript

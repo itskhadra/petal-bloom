@@ -25,6 +25,7 @@ My goal was to create a simple, user-friendly online flower shop and improve my 
 
 [View Petal Bloom Design](https://www.figma.com/make/s0XtrFaGjbrOqGiWI78l5t/Petal-Bloom---Online-Flower-Shop?t=X6qopAgTXRplCRCI-1)
 ## Technologies Used
+https://docs.google.com/presentation/d/1R8LCv7gXpKkGuovMAFKAONMB5_1H7bVd/edit?usp=sharing&ouid=109249888062727560513&rtpof=true&sd=true
 
 - HTML, CSS, and JavaScript
 - JSON Server for the backend API
